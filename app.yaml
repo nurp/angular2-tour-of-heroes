@@ -1,0 +1,46 @@
+application: appspotname
+version: v1
+runtime: go
+api_version: go1
+
+handlers:
+- url: /app
+  static_dir: app
+
+- url: /(js/.*\.js)
+  static_files: \1
+  upload: js/.*\.js
+
+- url: /(css/.*\.css)
+  static_files: \1
+  upload: css/.*\.css
+
+- url: /
+  static_files: index.html
+  upload: index.html
+
+- url: /.*
+  script: _go_app
+
+
+skip_files:
+- ^\.git/.*
+- .gitignore
+- .git
+
+- ^(.*/)?.*/assets/.*$
+- ^(.*/)?.*/build/.*$
+- ^(.*/)?.*/test/.*$
+- ^(.*/)?.*/templates/.*$
+- ^(.*/)?.*/node_modules/.*$
+
+- ^(assets/.*)
+- ^(build/.*)
+- ^(test/.*)
+- ^(templates/.*)
+- ^(node_modules/.*)
+
+- ^(.*/)?#.*#$
+- ^(.*/)?.*~$
+- ^(.*/)?.*/RCS/.*$
+- ^(.*/)?\..*$
