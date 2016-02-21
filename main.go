@@ -16,6 +16,12 @@ type handlerError struct {
 	Message string
 	Code    int
 }
+type hero struct {
+	Id int64 `json:"id"`
+	Name string `json:"name"`
+}
+
+var heroes = make([]hero, 0)
 
 type IdGetter func(ae.Context, int64) (interface{}, error)
 
@@ -40,13 +46,43 @@ func createIdGetterHandler(getter IdGetter) handler {
 // a custom type that we can use for handling errors and formatting responses
 type handler func(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError)
 
+func getHeroes(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError) {
+	return heroes, nil
+}
+
+func getHero(w http.ResponseWriter, r *http.Request) (interface{}, *handlerError) {
+	param := mux.Vars(r)["id"]
+	id, e := strconv.ParseInt(param, 10, 64)
+	if e != nil {
+		return nil, &handlerError{e, "id should be an integer", http.StatusBadRequest}
+	}
+	for i:= range heroes {
+		if heroes[i].Id == id {
+			return heroes[i], nil
+		}
+	}
+	
+	return nil, &handlerError{e, "no match for " + param, http.StatusBadRequest}
+}
+
+//init
 func init() {
 	log.Print("init")
 
 	r := mux.NewRouter()
-	
+
 	http.Handle("/", r)
 
+	r.Handle("/api/heroes", handler(getHeroes)).Methods("GET")
+	r.Handle("/api/heroes/{id}", handler(getHero)).Methods("GET")
+
+	heroes = append(heroes, hero{11,"Mr. Nice"})
+	heroes = append(heroes, hero{12,"Narco"})
+	heroes = append(heroes, hero{13,"Bombasto"})
+	heroes = append(heroes, hero{14,"Celeritas"})
+	heroes = append(heroes, hero{15,"Magneta"})
+	heroes = append(heroes, hero{16,"RubberMan"})
+	heroes = append(heroes, hero{17,"Dynama"})
 }
 // attach the standard ServeHTTP method to our handler so the http library can call it
 func (fn handler) ServeHTTP(w http.ResponseWriter, r *http.Request) {

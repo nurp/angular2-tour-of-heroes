@@ -19,7 +19,8 @@ export class HeroesComponent implements OnInit {
     this.selectedHero = undefined;
     this.heroes = [];
 
-    this._heroService.getHeroes().then(heroes => this.heroes = heroes);
+    this._heroService.getHeroes()
+      .subscribe(response  => this.heroes = response.json());
 
     return this.heroes;
   }

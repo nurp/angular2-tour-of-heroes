@@ -1,5 +1,5 @@
 import { Injectable } from 'angular2/core';
-import { HEROES } from './mock-heroes';
+import { Http} from 'angular2/http';
 
 export interface Hero {
   id: number;
@@ -8,13 +8,13 @@ export interface Hero {
 
 @Injectable()
 export class HeroService {
-  getHeroes() {
-    return Promise.resolve(HEROES);
-  }
+  constructor(private _http: Http) {}
 
-  getHero(id: number) {
-    return Promise.resolve(HEROES).then(
-      heroes => heroes.filter(h => h.id === id)[0]
-    );
+  getHeroes() {
+    return this._http.get('/api/heroes');
+  }
+ 
+ getHero(id: number) {
+   return this._http.get('/api/heroes/'+id);
   }
 }

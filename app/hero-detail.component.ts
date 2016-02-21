@@ -8,6 +8,7 @@ import { Hero, HeroService } from './hero.service';
   styleUrls: ['app/hero-detail.component.css'],
   directives: [ROUTER_DIRECTIVES]
 })
+
 export class HeroDetailComponent implements OnInit {
   @Input() hero: Hero;
 
@@ -18,7 +19,8 @@ export class HeroDetailComponent implements OnInit {
   ngOnInit() {
     if (!this.hero) {
       let id = +this._routeParams.get('id');
-      this._heroService.getHero(id).then(hero => this.hero = hero);
+      this._heroService.getHero(id)
+      .subscribe(response  => this.hero = response.json());
     }
   }
 }
