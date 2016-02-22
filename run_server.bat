@@ -1,1 +1,1 @@
-C:\DEV\go_appengine\goapp serve .\dispatch.yaml .\web.yaml .\backend.yaml
+C:\DEV\go_appengine\goapp serve .
